@@ -37,13 +37,11 @@ def display_parameters():
         table {
             font-size: 20px;
             border-collapse: collapse;
-            width: 50%;
+            width: 100%;
             margin-bottom: 10px;
-            margin-left: auto;
-            margin-right: auto;
         }
         th, td {
-            padding: 0px;
+            padding: 10px;
             text-align: center;
         }
         th {
@@ -118,45 +116,67 @@ def display_parameters():
             if coord['timestamp'] > datetime.now() - timedelta(seconds=10)
         ]
 
-        # Display the updated parameters in a table with icons
-        output_content = f"""
-        <table>
-            <tr><th>Parameter</th><th>Value</th></tr>
-            <tr>
-                <td><img src='gear_icon.jpg' width='30' height='30'> Gear Ratio</td>
-                <td>{gear}</td>
-            </tr>
-            <tr>
-                <td><img src='engine_icon.jpg' width='30' height='30'> Engine Speed (rpm)</td>
-                <td>{engine_speed}</td>
-            </tr>
-            <tr>
-                <td><img src='throttle_icon.jpg' width='30' height='30'> Throttle Setting (%)</td>
-                <td>{throttle_setting}</td>
-            </tr>
-            <tr>
-                <td><img src='depth_icon.jpg' width='30' height='30'> Implement Depth (cm)</td>
-                <td>{implement_depth}</td>
-            </tr>
-            <tr>
-                <td><img src='speed_icon.jpg' width='30' height='30'> Actual Speed (km/h)</td>
-                <td>{actual_speed}</td>
-            </tr>
-            <tr>
-                <td><img src='slip_icon.jpg' width='30' height='30'> Slip (%)</td>
-                <td>{slip:.2f}</td>
-            </tr>
-            <tr>
-                <td><img src='gps_icon.jpg' width='30' height='30'> Latitude (N)</td>
-                <td>{current_lat}</td>
-            </tr>
-            <tr>
-                <td><img src='gps_icon.jpg' width='30' height='30'> Longitude (E)</td>
-                <td>{current_long}</td>
-            </tr>
-        </table>
-        """
-        output_placeholder.markdown(output_content, unsafe_allow_html=True)
+        # Display the updated parameters and the plot side by side
+        col1, col2 = st.columns(2)
+
+        with col1:
+            output_content = f"""
+            <table>
+                <tr><th>Parameter</th><th>Value</th></tr>
+                <tr>
+                    <td><img src='gear_icon.jpg' width='30' height='30'> Gear Ratio</td>
+                    <td>{gear}</td>
+                </tr>
+                <tr>
+                    <td><img src='engine_icon.jpg' width='30' height='30'> Engine Speed (rpm)</td>
+                    <td>{engine_speed}</td>
+                </tr>
+                <tr>
+                    <td><img src='throttle_icon.jpg' width='30' height='30'> Throttle Setting (%)</td>
+                    <td>{throttle_setting}</td>
+                </tr>
+                <tr>
+                    <td><img src='depth_icon.jpg' width='30' height='30'> Implement Depth (cm)</td>
+                    <td>{implement_depth}</td>
+                </tr>
+                <tr>
+                    <td><img src='speed_icon.jpg' width='30' height='30'> Actual Speed (km/h)</td>
+                    <td>{actual_speed}</td>
+                </tr>
+                <tr>
+                    <td><img src='slip_icon.jpg' width='30' height='30'> Slip (%)</td>
+                    <td>{slip:.2f}</td>
+                </tr>
+                <tr>
+                    <td><img src='gps_icon.jpg' width='30' height='30'> Latitude (N)</td>
+                    <td>{current_lat}</td>
+                </tr>
+                <tr>
+                    <td><img src='gps_icon.jpg' width='30' height='30'> Longitude (E)</td>
+                    <td>{current_long}</td>
+                </tr>
+            </table>
+            """
+            output_placeholder.markdown(output_content, unsafe_allow_html=True)
+
+        with col2:
+            # Plot the real-time data
+            fig, ax = plt.subplots(5, 1, figsize=(10, 15), sharex=True)
+
+            ax[0].plot(time_stamps, engine_speed_values, label="Engine Speed (rpm)", color='blue')
+            ax[1].plot(time_stamps, throttle_values, label="Throttle Setting (%)", color='green')
+            ax[2].plot(time_stamps, implement_depth_values, label="Implement Depth (cm)", color='purple')
+            ax[3].plot(time_stamps, forward_speed_values, label="Actual Speed (km/h)", color='orange')
+            ax[4].plot(time_stamps, slip_values, label="Slip (%)", color='red')
+
+            for i, axis in enumerate(ax):
+                axis.legend(loc="upper right")
+                axis.grid(True)
+            
+            ax[-1].set_xlabel("Time (s)")
+
+            with graph_placeholder:
+                st.pyplot(fig)
 
         # Create and display map
         m = folium.Map(location=[current_lat, current_long], zoom_start=15)
@@ -167,24 +187,6 @@ def display_parameters():
             ).add_to(m)
         with map_placeholder:
             folium_static(m, width=700, height=500)
-
-        # Plot the real-time data
-        fig, ax = plt.subplots(5, 1, figsize=(10, 15), sharex=True)
-
-        ax[0].plot(time_stamps, engine_speed_values, label="Engine Speed (rpm)", color='blue')
-        ax[1].plot(time_stamps, throttle_values, label="Throttle Setting (%)", color='green')
-        ax[2].plot(time_stamps, implement_depth_values, label="Implement Depth (cm)", color='purple')
-        ax[3].plot(time_stamps, forward_speed_values, label="Actual Speed (km/h)", color='orange')
-        ax[4].plot(time_stamps, slip_values, label="Slip (%)", color='red')
-
-        for i, axis in enumerate(ax):
-            axis.legend(loc="upper right")
-            axis.grid(True)
-        
-        ax[-1].set_xlabel("Time (s)")
-
-        with graph_placeholder:
-            st.pyplot(fig)
 
         time.sleep(3)  # Refresh rate of 3 seconds
 
