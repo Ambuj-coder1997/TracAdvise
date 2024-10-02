@@ -92,7 +92,7 @@ def display_parameters():
 
         # Calculate Vt and slip
         Vt = engine_speed / x
-        slip = 100 * (1 - ((actual_speed)/(Vt*3.14*1.6*(60/1000)))
+        slip = 100 * (1 - ((actual_speed)/(Vt*3.14*1.6*(60/1000))))
 
         # Append data to the lists
         time_stamps.append(current_time)
