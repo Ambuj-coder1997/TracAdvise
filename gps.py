@@ -1,7 +1,7 @@
 import streamlit as st
 import random
 import time
-from datetime import datetime, timedelta
+from datetime import datetime
 import folium
 from streamlit_folium import folium_static
 import matplotlib.pyplot as plt
@@ -51,7 +51,7 @@ def display_parameters():
         table {
             font-size: 20px;
             border-collapse: collapse;
-            width: 50%;
+            width: 100%;
             margin-bottom: 10px;
             margin-left: auto;
             margin-right: auto;
@@ -142,6 +142,14 @@ def display_parameters():
         # Update the marker's position
         marker.location = [current_lat, current_long]
 
+        # Icons for each parameter (replace with actual image paths)
+        engine_icon = 'engine_icon.jpg'
+        throttle_icon = 'throttle_icon.jpg'
+        depth_icon = 'depth_icon.jpg'
+        speed_icon = 'speed_icon.jpg'
+        slip_icon = 'slip_icon.jpg'
+        gps_icon = 'gps_icon.jpg'
+
         # Create the plots inside the table
         engine_fig = plot_graph(time_stamps, engine_speed_values, "Engine Speed (rpm)", 'blue', future_values, future_time_stamps)
         throttle_fig = plot_graph(time_stamps, throttle_values, "Throttle Setting (%)", 'green')
@@ -149,62 +157,65 @@ def display_parameters():
         speed_fig = plot_graph(time_stamps, forward_speed_values, "Actual Speed (km/h)", 'orange')
         slip_fig = plot_graph(time_stamps, slip_values, "Slip (%)", 'red')
 
-        # Prepare the HTML table with icons, values, and plot placeholders
-        st.markdown(
-            """
-            <table>
-                <tr>
-                    <th>Parameter</th>
-                    <th>Value</th>
-                    <th>Variation Plot</th>
-                    <th>GPS Map</th>
-                </tr>
-                <tr>
-                    <td>Engine Speed (rpm)</td>
-                    <td>{}</td>
-                    <td>{}</td>
-                    <td rowspan="6"><div id='mapid'></div></td>
-                </tr>
-                <tr>
-                    <td>Throttle Setting (%)</td>
-                    <td>{}</td>
-                    <td>{}</td>
-                </tr>
-                <tr>
-                    <td>Implement Depth (cm)</td>
-                    <td>{}</td>
-                    <td>{}</td>
-                </tr>
-                <tr>
-                    <td>Actual Speed (km/h)</td>
-                    <td>{}</td>
-                    <td>{}</td>
-                </tr>
-                <tr>
-                    <td>Slip (%)</td>
-                    <td>{:.2f}</td>
-                    <td>{}</td>
-                </tr>
-                <tr>
-                    <td>GPS Coordinates</td>
-                    <td>Lat: {}, Long: {}</td>
-                </tr>
-            </table>
-            """.format(
-                engine_speed, st.pyplot(engine_fig),
-                throttle_setting, st.pyplot(throttle_fig),
-                implement_depth, st.pyplot(depth_fig),
-                actual_speed, st.pyplot(speed_fig),
-                slip, st.pyplot(slip_fig),
-                current_lat, current_long),
-            unsafe_allow_html=True
+        # Display the parameter table with icons and plots
+        st.markdown("""
+        <table>
+            <tr>
+                <th>Parameter</th>
+                <th>Icon</th>
+                <th>Value</th>
+                <th>Variation Plot</th>
+            </tr>
+            <tr>
+                <td>Engine Speed (rpm)</td>
+                <td><img src='{}' width='50'></td>
+                <td>{}</td>
+                <td>{}</td>
+            </tr>
+            <tr>
+                <td>Throttle Setting (%)</td>
+                <td><img src='{}' width='50'></td>
+                <td>{}</td>
+                <td>{}</td>
+            </tr>
+            <tr>
+                <td>Implement Depth (cm)</td>
+                <td><img src='{}' width='50'></td>
+                <td>{}</td>
+                <td>{}</td>
+            </tr>
+            <tr>
+                <td>Actual Speed (km/h)</td>
+                <td><img src='{}' width='50'></td>
+                <td>{}</td>
+                <td>{}</td>
+            </tr>
+            <tr>
+                <td>Slip (%)</td>
+                <td><img src='{}' width='50'></td>
+                <td>{:.2f}</td>
+                <td>{}</td>
+            </tr>
+            <tr>
+                <td>GPS Coordinates</td>
+                <td><img src='{}' width='50'></td>
+                <td>Lat: {}, Long: {}</td>
+                <td rowspan="2"><div id='mapid'></div></td>
+            </tr>
+        </table>
+        """.format(
+            engine_icon, engine_speed, st.pyplot(engine_fig),
+            throttle_icon, throttle_setting, st.pyplot(throttle_fig),
+            depth_icon, implement_depth, st.pyplot(depth_fig),
+            speed_icon, actual_speed, st.pyplot(speed_fig),
+            slip_icon, slip, st.pyplot(slip_fig),
+            gps_icon, current_lat, current_long
+        ), unsafe_allow_html=True
         )
 
-        time.sleep(3)  # Refresh rate of 3 seconds
-
-def show_gps_page():
-    display_parameters()
+        # Sleep to simulate real-time updates
+        time.sleep(3)
 
 # Call the GPS page to run the app
 if __name__ == "__main__":
-    show_gps_page()
+    display_parameters()
