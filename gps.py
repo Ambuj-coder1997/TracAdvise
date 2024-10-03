@@ -128,7 +128,7 @@ def display_parameters():
             <table>
                 <tr><th>Parameter</th><th>Value</th></tr>
                 <tr>
-                    <td><img src='image1' width='30' height='30'> Gear Ratio</td>
+                    <td><img src='https://d1nhio0ox7pgb.cloudfront.net/_img/v_collection_png/512x512/shadow/gears.png' width='30' height='30'> Gear Ratio</td>
                     <td>{gear}</td>
                 </tr>
                 <tr>
