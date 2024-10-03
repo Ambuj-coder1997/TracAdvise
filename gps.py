@@ -212,7 +212,7 @@ def display_parameters():
         graph_placeholder.pyplot(fig)
 
         # Create and display satellite map below plot
-        m = folium.Map(location=[current_lat, current_long], zoom_start=15, tiles="Stamen Terrain")
+        m = folium.Map(location=[current_lat, current_long], zoom_start=15, tiles="Stamen Terrain", attr="Map data © OpenStreetMap contributors")
         for coord in coordinates_list:
             folium.Marker(
                 location=[coord['latitude'], coord['longitude']],
