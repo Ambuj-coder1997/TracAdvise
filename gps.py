@@ -171,19 +171,28 @@ def display_parameters():
                 folium_static(m, width=400, height=300)
 
         with col2:
-            # Plot the real-time data on the right
+            # Plot the real-time data on the right with dots and shaded areas
             fig, ax = plt.subplots(5, 1, figsize=(10, 15), sharex=True)
 
-            ax[0].plot(time_stamps, engine_speed_values, label="Engine Speed (rpm)", color='blue')
-            ax[1].plot(time_stamps, throttle_values, label="Throttle Setting (%)", color='green')
-            ax[2].plot(time_stamps, implement_depth_values, label="Implement Depth (cm)", color='purple')
-            ax[3].plot(time_stamps, forward_speed_values, label="Actual Speed (km/h)", color='orange')
-            ax[4].plot(time_stamps, slip_values, label="Slip (%)", color='red')
+            ax[0].plot(time_stamps, engine_speed_values, label="Engine Speed (rpm)", color='blue', marker='o')
+            ax[0].fill_between(time_stamps, engine_speed_values, color='blue', alpha=0.2)
+
+            ax[1].plot(time_stamps, throttle_values, label="Throttle Setting (%)", color='green', marker='o')
+            ax[1].fill_between(time_stamps, throttle_values, color='green', alpha=0.2)
+
+            ax[2].plot(time_stamps, implement_depth_values, label="Implement Depth (cm)", color='purple', marker='o')
+            ax[2].fill_between(time_stamps, implement_depth_values, color='purple', alpha=0.2)
+
+            ax[3].plot(time_stamps, forward_speed_values, label="Actual Speed (km/h)", color='orange', marker='o')
+            ax[3].fill_between(time_stamps, forward_speed_values, color='orange', alpha=0.2)
+
+            ax[4].plot(time_stamps, slip_values, label="Slip (%)", color='red', marker='o')
+            ax[4].fill_between(time_stamps, slip_values, color='red', alpha=0.2)
 
             for i, axis in enumerate(ax):
                 axis.legend(loc="upper right")
                 axis.grid(True)
-            
+
             ax[-1].set_xlabel("Time (s)")
 
             with graph_placeholder:
