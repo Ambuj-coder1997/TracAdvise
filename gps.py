@@ -19,9 +19,6 @@ def generate_implement_depth():
 def generate_actual_forward_speed():
     return round(random.uniform(0.8, 4.5), 2)
 
-def generate_heading():
-    return round(random.uniform(0, 360), 2)
-
 # Generate latitude and longitude
 def generate_latitude(current_lat):
     return current_lat + random.uniform(-0.0001, 0.0001)
@@ -29,34 +26,62 @@ def generate_latitude(current_lat):
 def generate_longitude(current_long):
     return current_long + random.uniform(-0.0001, 0.0001)
 
+# Icon URLs for the table
+icon_url = {
+    "Gear Ratio": "https://cdn-icons-png.flaticon.com/128/3043/3043430.png",
+    "Engine Speed": "https://cdn-icons-png.flaticon.com/128/1828/1828919.png",
+    "Throttle Setting": "https://cdn-icons-png.flaticon.com/128/2179/2179127.png",
+    "Implement Depth": "https://cdn-icons-png.flaticon.com/128/3349/3349386.png",
+    "Actual Speed": "https://cdn-icons-png.flaticon.com/128/1828/1828899.png",
+    "Slip": "https://cdn-icons-png.flaticon.com/128/2938/2938105.png",
+    "Latitude": "https://cdn-icons-png.flaticon.com/128/684/684908.png",
+    "Longitude": "https://cdn-icons-png.flaticon.com/128/684/684908.png"
+}
+
 # Main function to display tractor parameters
 def display_parameters():
     st.markdown(
         """
         <style>
-        body {
+        /* Set entire app background color to white */
+        .main {
             background-color: white;
         }
+
+        /* Set the table font and formatting */
         table {
             font-size: 20px;
             border-collapse: collapse;
             width: 100%;
             margin-bottom: 10px;
         }
+
         th, td {
             padding: 10px;
             text-align: center;
         }
+
         th {
             background-color: #009688;
             color: white;
         }
+
+        /* Change background color of the table to white */
+        table, th, td {
+            background-color: white;
+        }
+
+        h3 {
+            text-align: center;
+            color: DarkGreen;
+        }
+
         </style>
         """,
         unsafe_allow_html=True,
     )
 
-    st.markdown("<h3 style='text-align: center; color: DarkGreen;'>Real-time Tractor Operating Parameters</h3>", unsafe_allow_html=True)
+    st.markdown("<h3>Real-time Tractor Operating Parameters</h3>", unsafe_allow_html=True)
 
     # Dropdown for gear selection
     gear_options = {"L1": 160, "L2": 120, "L3": 80, "L4": 40, "H1": 30}
@@ -79,7 +104,6 @@ def display_parameters():
     implement_depth_values = []
     forward_speed_values = []
     slip_values = []
-    heading_values = []
 
     start_time = datetime.now()
 
@@ -91,11 +115,10 @@ def display_parameters():
         throttle_setting = generate_throttle_setting()
         implement_depth = generate_implement_depth()
         actual_speed = generate_actual_forward_speed()
-        heading = generate_heading()
 
         # Calculate Vt and slip
         Vt = engine_speed / x
-        slip = 100 * (1 - ((actual_speed) / (Vt * 3.14 * 1.6 * (60 / 1000))))
+        slip = 100 * (1 - ((actual_speed)/(Vt*3.14*1.6*(60/1000))))
 
         # Append data to the lists
         time_stamps.append(current_time)
@@ -104,7 +127,6 @@ def display_parameters():
         implement_depth_values.append(implement_depth)
         forward_speed_values.append(actual_speed)
         slip_values.append(slip)
-        heading_values.append(heading)
 
         # Update GPS coordinates
         current_lat = generate_latitude(current_lat)
@@ -122,82 +144,84 @@ def display_parameters():
             if coord['timestamp'] > datetime.now() - timedelta(seconds=10)
         ]
 
-        # Split the layout into two columns
-        col1, col2 = st.columns([1, 3])  # Left column is smaller than right column
+        # Create table with icons
+        table_content = f"""
+        <table>
+            <tr><th>Parameter</th><th>Value</th></tr>
+            <tr>
+                <td><img src="{icon_url['Gear Ratio']}" width="30"> Gear Ratio</td>
+                <td>{gear}</td>
+            </tr>
+            <tr>
+                <td><img src="{icon_url['Engine Speed']}" width="30"> Engine Speed (rpm)</td>
+                <td>{engine_speed}</td>
+            </tr>
+            <tr>
+                <td><img src="{icon_url['Throttle Setting']}" width="30"> Throttle Setting (%)</td>
+                <td>{throttle_setting}</td>
+            </tr>
+            <tr>
+                <td><img src="{icon_url['Implement Depth']}" width="30"> Implement Depth (cm)</td>
+                <td>{implement_depth}</td>
+            </tr>
+            <tr>
+                <td><img src="{icon_url['Actual Speed']}" width="30"> Actual Speed (km/h)</td>
+                <td>{actual_speed}</td>
+            </tr>
+            <tr>
+                <td><img src="{icon_url['Slip']}" width="30"> Slip (%)</td>
+                <td>{slip:.2f}</td>
+            </tr>
+            <tr>
+                <td><img src="{icon_url['Latitude']}" width="30"> Latitude (N)</td>
+                <td>{current_lat}</td>
+            </tr>
+            <tr>
+                <td><img src="{icon_url['Longitude']}" width="30"> Longitude (E)</td>
+                <td>{current_long}</td>
+            </tr>
+        </table>
+        """
+        output_placeholder.markdown(table_content, unsafe_allow_html=True)
 
-        with col1:
-            # Display the updated parameters in a table
-            output_content = f"""
-            <table>
-                <tr><th>Parameter</th><th>Value</th></tr>
-                <tr>
-                    <td><img src='https://drive.google.com/file/d/1jJp-sVT4EN6U1uxwjU5WWLAitTP00Lwp/view?usp=drive_link' width='30' height='30'> Gear Ratio</td>
-                    <td>{gear}</td>
-                </tr>
-                <tr>
-                    <td><img src='engine_icon.jpg' width='30' height='30'> Engine Speed (rpm)</td>
-                    <td>{engine_speed}</td>
-                </tr>
-                <tr>
-                    <td><img src='throttle_icon.jpg' width='30' height='30'> Throttle Setting (%)</td>
-                    <td>{throttle_setting}</td>
-                </tr>
-                <tr>
-                    <td><img src='depth_icon.jpg' width='30' height='30'> Implement Depth (cm)</td>
-                    <td>{implement_depth}</td>
-                </tr>
-                <tr>
-                    <td><img src='speed_icon.jpg' width='30' height='30'> Actual Speed (km/h)</td>
-                    <td>{actual_speed}</td>
-                </tr>
-                <tr>
-                    <td><img src='slip_icon.jpg' width='30' height='30'> Slip (%)</td>
-                    <td>{slip:.2f}</td>
-                </tr>
-                <tr>
-                    <td><img src='heading_icon.jpg' width='30' height='30'> Heading (°)</td>
-                    <td>{heading}</td>
-                </tr>
-                <tr>
-                    <td><img src='gps_icon.jpg' width='30' height='30'> Latitude (N)</td>
-                    <td>{current_lat}</td>
-                </tr>
-                <tr>
-                    <td><img src='gps_icon.jpg' width='30' height='30'> Longitude (E)</td>
-                    <td>{current_long}</td>
-                </tr>
-            </table>
-            """
-            output_placeholder.markdown(output_content, unsafe_allow_html=True)
+        # Plot the real-time data on the right with dots and shaded areas
+        fig, ax = plt.subplots(5, 1, figsize=(10, 15), sharex=True)
 
-        with col2:
-            # Plot the real-time data on the right
-            fig, ax = plt.subplots(5, 1, figsize=(10, 15), sharex=True)
+        ax[0].plot(time_stamps, engine_speed_values, label="Engine Speed (rpm)", color='blue', marker='o')
+        ax[0].fill_between(time_stamps, engine_speed_values, color='blue', alpha=0.2)
 
-            ax[0].plot(time_stamps, engine_speed_values, label="Engine Speed (rpm)", color='blue')
-            ax[1].plot(time_stamps, throttle_values, label="Throttle Setting (%)", color='green')
-            ax[2].plot(time_stamps, implement_depth_values, label="Implement Depth (cm)", color='purple')
-            ax[3].plot(time_stamps, forward_speed_values, label="Actual Speed (km/h)", color='orange')
-            ax[4].plot(time_stamps, slip_values, label="Slip (%)", color='red')
+        ax[1].plot(time_stamps, throttle_values, label="Throttle Setting (%)", color='green', marker='o')
+        ax[1].fill_between(time_stamps, throttle_values, color='green', alpha=0.2)
 
-            for i, axis in enumerate(ax):
-                axis.legend(loc="upper right")
-                axis.grid(True)
-            
-            ax[-1].set_xlabel("Time (s)")
+        ax[2].plot(time_stamps, implement_depth_values, label="Implement Depth (cm)", color='purple', marker='o')
+        ax[2].fill_between(time_stamps, implement_depth_values, color='purple', alpha=0.2)
 
-            with graph_placeholder:
-                st.pyplot(fig)
+        ax[3].plot(time_stamps, forward_speed_values, label="Actual Speed (km/h)", color='orange', marker='o')
+        ax[3].fill_between(time_stamps, forward_speed_values, color='orange', alpha=0.2)
 
-        # Create and display satellite map below the graph
-        m = folium.Map(location=[current_lat, current_long], zoom_start=15, tiles="Satellite", attr='© OpenStreetMap contributors')
+        ax[4].plot(time_stamps, slip_values, label="Slip (%)", color='red', marker='o')
+        ax[4].fill_between(time_stamps, slip_values, color='red', alpha=0.2)
+
+        for i, axis in enumerate(ax):
+            axis.legend(loc="upper right")
+            axis.grid(True)
+
+        ax[-1].set_xlabel("Time (s)")
+
+        # Display plot
+        graph_placeholder.pyplot(fig)
+
+        # Create and display satellite map below plot
+        m = folium.Map(location=[current_lat, current_long], zoom_start=15, tiles="Stamen Terrain", attr="Map data © OpenStreetMap contributors")
         for coord in coordinates_list:
             folium.Marker(
                 location=[coord['latitude'], coord['longitude']],
                 popup=f"Lat: {coord['latitude']}, Long: {coord['longitude']}, Speed: {coord['speed']} km/h"
             ).add_to(m)
+
+        # Display map below the real-time graph
         with map_placeholder:
-            folium_static(m, width=700, height=400)
+            folium_static(m, width=1000, height=500)
 
         time.sleep(3)  # Refresh rate of 3 seconds
 
