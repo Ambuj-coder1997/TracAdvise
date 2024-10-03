@@ -50,7 +50,7 @@ def display_parameters():
 
         /* Set the table font and formatting */
         table {
-            font-size: 20px;
+            font-size: 25px;
             border-collapse: collapse;
             width: 100%;
             margin-bottom: 10px;
@@ -62,7 +62,7 @@ def display_parameters():
         }
 
         th {
-            background-color: #009688;
+            background-color: white;
             color: white;
         }
 
@@ -73,7 +73,7 @@ def display_parameters():
 
         h3 {
             text-align: center;
-            color: DarkGreen;
+            color: black;
         }
 
         </style>
