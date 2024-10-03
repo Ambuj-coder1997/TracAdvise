@@ -116,10 +116,11 @@ def display_parameters():
             if coord['timestamp'] > datetime.now() - timedelta(seconds=10)
         ]
 
-        # Display the updated parameters and the plot side by side
-        col1, col2 = st.columns(2)
+        # Split the layout into two columns
+        col1, col2 = st.columns([2, 3])  # Left column is smaller than right column
 
         with col1:
+            # Display the updated parameters in a table with the GPS map below
             output_content = f"""
             <table>
                 <tr><th>Parameter</th><th>Value</th></tr>
@@ -159,8 +160,18 @@ def display_parameters():
             """
             output_placeholder.markdown(output_content, unsafe_allow_html=True)
 
+            # Create and display map in the same column
+            m = folium.Map(location=[current_lat, current_long], zoom_start=15)
+            for coord in coordinates_list:
+                folium.Marker(
+                    location=[coord['latitude'], coord['longitude']],
+                    popup=f"Lat: {coord['latitude']}, Long: {coord['longitude']}, Speed: {coord['speed']} km/h"
+                ).add_to(m)
+            with map_placeholder:
+                folium_static(m, width=400, height=300)
+
         with col2:
-            # Plot the real-time data
+            # Plot the real-time data on the right
             fig, ax = plt.subplots(5, 1, figsize=(10, 15), sharex=True)
 
             ax[0].plot(time_stamps, engine_speed_values, label="Engine Speed (rpm)", color='blue')
@@ -178,16 +189,6 @@ def display_parameters():
             with graph_placeholder:
                 st.pyplot(fig)
 
-        # Create and display map
-        m = folium.Map(location=[current_lat, current_long], zoom_start=15)
-        for coord in coordinates_list:
-            folium.Marker(
-                location=[coord['latitude'], coord['longitude']],
-                popup=f"Lat: {coord['latitude']}, Long: {coord['longitude']}, Speed: {coord['speed']} km/h"
-            ).add_to(m)
-        with map_placeholder:
-            folium_static(m, width=700, height=500)
-
         time.sleep(3)  # Refresh rate of 3 seconds
 
 def show_gps_page():
@@ -196,3 +197,4 @@ def show_gps_page():
 # Call the GPS page to run the app
 if __name__ == "__main__":
     show_gps_page()
+
