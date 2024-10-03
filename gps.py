@@ -131,7 +131,7 @@ def display_parameters():
             <table>
                 <tr><th>Parameter</th><th>Value</th></tr>
                 <tr>
-                    <td><img src='gear_icon.jpg' width='30' height='30'> Gear Ratio</td>
+                    <td><img src='https://drive.google.com/file/d/1jJp-sVT4EN6U1uxwjU5WWLAitTP00Lwp/view?usp=drive_link' width='30' height='30'> Gear Ratio</td>
                     <td>{gear}</td>
                 </tr>
                 <tr>
