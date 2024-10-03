@@ -1,65 +1,199 @@
 import streamlit as st
+import random
+import time
+from datetime import datetime, timedelta
+import folium
+from streamlit_folium import folium_static
 import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
 
-# Sample data for the table and map (replace this with actual data)
-data = {
-    'Parameter': ['Gear Ratio', 'Engine Speed (rpm)', 'Throttle Setting (%)', 'Implement Depth (cm)',
-                  'Actual Speed (km/h)', 'Slip (%)', 'Latitude (N)', 'Longitude (E)'],
-    'Value': ['L1', 1490, 51, 27.72, 4.34, -54.60, 22.312841038797888, 87.33148608163823]
-}
+# Function to generate parameters within given ranges
+def generate_engine_speed():
+    return random.randint(1200, 1800)
 
-# Convert the data to a pandas DataFrame for table display
-df = pd.DataFrame(data)
+def generate_throttle_setting():
+    return random.randint(45, 85)
 
-# Sample GPS coordinates (replace with real GPS data)
-gps_coordinates = pd.DataFrame({
-    'lat': [22.312841038797888],
-    'lon': [87.33148608163823]
-})
+def generate_implement_depth():
+    return random.uniform(5, 45)
 
-# Create two columns: table + map on the left, plot on the right
-col1, col2 = st.columns(2)
+def generate_actual_forward_speed():
+    return round(random.uniform(0.8, 4.5), 2)
 
-# Column 1: Table and GPS Map
-with col1:
-    # Display the header for the table
-    st.header("Real-time Tractor Operating Parameters")
-    
-    # Display the table
-    st.table(df)
+# Generate latitude and longitude
+def generate_latitude(current_lat):
+    return current_lat + random.uniform(-0.0001, 0.0001)
 
-    # Display the GPS map (replace this with real GPS data in use)
-    st.map(gps_coordinates)
+def generate_longitude(current_long):
+    return current_long + random.uniform(-0.0001, 0.0001)
 
-# Column 2: Real-time Plot with dynamic dots and shaded area
-with col2:
-    st.header("Real-time Data Variation")
-    
-    # Simulate real-time data for the plot (replace with actual real-time data)
-    x = np.linspace(0, 10, 100)  # Example x-axis (time or similar)
-    y = np.sin(x)  # Example y-axis (replace with tractor parameter data)
+# Main function to display tractor parameters
+def display_parameters():
+    st.markdown(
+        """
+        <style>
+        body {
+            background-color: #f5f5f5;
+        }
+        table {
+            font-size: 20px;
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #009688;
+            color: white;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
 
-    # Create the plot
-    fig, ax = plt.subplots()
+    st.markdown("<h3 style='text-align: center; color: DarkGreen;'>Real-time Tractor Operating Parameters</h3>", unsafe_allow_html=True)
 
-    # Plot the data
-    ax.plot(x, y, label='Parameter Variation', color='blue')
+    # Dropdown for gear selection
+    gear_options = {"L1": 160, "L2": 120, "L3": 80, "L4": 40, "H1": 30}
+    gear = st.selectbox('Select the operating gear:', list(gear_options.keys()))
+    x = gear_options[gear]
 
-    # Mark the current point with a red dot
-    current_value_index = -1  # Use the latest point in the data, or dynamically calculate the index
-    ax.plot(x[current_value_index], y[current_value_index], 'ro', label='Current Value')
+    # Initializing placeholders for output and map
+    output_placeholder = st.empty()
+    map_placeholder = st.empty()
+    graph_placeholder = st.empty()
 
-    # Shade the area under the curve
-    ax.fill_between(x, y, color="lightblue", alpha=0.5)
+    current_lat = 22.31278
+    current_long = 87.33152
+    coordinates_list = []
 
-    # Label the axes
-    ax.set_xlabel('Time')
-    ax.set_ylabel('Value')
-    
-    # Add a legend
-    ax.legend()
+    # Variables to store time for graphing
+    time_stamps = []
+    engine_speed_values = []
+    throttle_values = []
+    implement_depth_values = []
+    forward_speed_values = []
+    slip_values = []
 
-    # Display the plot
-    st.pyplot(fig)
+    start_time = datetime.now()
+
+    while True:
+        current_time = (datetime.now() - start_time).total_seconds()
+
+        # Generate the parameters
+        engine_speed = generate_engine_speed()
+        throttle_setting = generate_throttle_setting()
+        implement_depth = generate_implement_depth()
+        actual_speed = generate_actual_forward_speed()
+
+        # Calculate Vt and slip
+        Vt = engine_speed / x
+        slip = 100 * (1 - ((actual_speed)/(Vt*3.14*1.6*(60/1000))))
+
+        # Append data to the lists
+        time_stamps.append(current_time)
+        engine_speed_values.append(engine_speed)
+        throttle_values.append(throttle_setting)
+        implement_depth_values.append(implement_depth)
+        forward_speed_values.append(actual_speed)
+        slip_values.append(slip)
+
+        # Update GPS coordinates
+        current_lat = generate_latitude(current_lat)
+        current_long = generate_longitude(current_long)
+        coordinates_list.append({
+            'latitude': current_lat,
+            'longitude': current_long,
+            'timestamp': datetime.now(),
+            'speed': actual_speed
+        })
+
+        # Remove coordinates older than 10 seconds
+        coordinates_list = [
+            coord for coord in coordinates_list
+            if coord['timestamp'] > datetime.now() - timedelta(seconds=10)
+        ]
+
+        # Split the layout into two columns
+        col1, col2 = st.columns([1, 3])  # Left column is smaller than right column
+
+        with col1:
+            # Display the updated parameters in a table with the GPS map below
+            output_content = f"""
+            <table>
+                <tr><th>Parameter</th><th>Value</th></tr>
+                <tr>
+                    <td><img src='gear_icon.jpg' width='30' height='30'> Gear Ratio</td>
+                    <td>{gear}</td>
+                </tr>
+                <tr>
+                    <td><img src='engine_icon.jpg' width='30' height='30'> Engine Speed (rpm)</td>
+                    <td>{engine_speed}</td>
+                </tr>
+                <tr>
+                    <td><img src='throttle_icon.jpg' width='30' height='30'> Throttle Setting (%)</td>
+                    <td>{throttle_setting}</td>
+                </tr>
+                <tr>
+                    <td><img src='depth_icon.jpg' width='30' height='30'> Implement Depth (cm)</td>
+                    <td>{implement_depth}</td>
+                </tr>
+                <tr>
+                    <td><img src='speed_icon.jpg' width='30' height='30'> Actual Speed (km/h)</td>
+                    <td>{actual_speed}</td>
+                </tr>
+                <tr>
+                    <td><img src='slip_icon.jpg' width='30' height='30'> Slip (%)</td>
+                    <td>{slip:.2f}</td>
+                </tr>
+                <tr>
+                    <td><img src='gps_icon.jpg' width='30' height='30'> Latitude (N)</td>
+                    <td>{current_lat}</td>
+                </tr>
+                <tr>
+                    <td><img src='gps_icon.jpg' width='30' height='30'> Longitude (E)</td>
+                    <td>{current_long}</td>
+                </tr>
+            </table>
+            """
+            output_placeholder.markdown(output_content, unsafe_allow_html=True)
+
+            # Create and display map in the same column
+            m = folium.Map(location=[current_lat, current_long], zoom_start=15)
+            for coord in coordinates_list:
+                folium.Marker(
+                    location=[coord['latitude'], coord['longitude']],
+                    popup=f"Lat: {coord['latitude']}, Long: {coord['longitude']}, Speed: {coord['speed']} km/h"
+                ).add_to(m)
+            with map_placeholder:
+                folium_static(m, width=400, height=300)
+
+        with col2:
+            # Plot the real-time data on the right
+            fig, ax = plt.subplots(5, 1, figsize=(10, 15), sharex=True)
+
+            ax[0].plot(time_stamps, engine_speed_values, label="Engine Speed (rpm)", color='blue')
+            ax[1].plot(time_stamps, throttle_values, label="Throttle Setting (%)", color='green')
+            ax[2].plot(time_stamps, implement_depth_values, label="Implement Depth (cm)", color='purple')
+            ax[3].plot(time_stamps, forward_speed_values, label="Actual Speed (km/h)", color='orange')
+            ax[4].plot(time_stamps, slip_values, label="Slip (%)", color='red')
+
+            for i, axis in enumerate(ax):
+                axis.legend(loc="upper right")
+                axis.grid(True)
+            
+            ax[-1].set_xlabel("Time (s)")
+
+            with graph_placeholder:
+                st.pyplot(fig)
+
+        time.sleep(3)  # Refresh rate of 3 seconds
+
+def show_gps_page():
+    display_parameters()
+
+# Call the GPS page to run the app
+if __name__ == "__main__":
+    show_gps_page()
