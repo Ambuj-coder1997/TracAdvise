@@ -5,9 +5,6 @@ from datetime import datetime, timedelta
 import folium
 from streamlit_folium import folium_static
 import matplotlib.pyplot as plt
-from PIL import Image
-
-image1 = Image.open("gear_icon.jpg")
 
 # Function to generate parameters within given ranges
 def generate_engine_speed():
@@ -34,29 +31,45 @@ def display_parameters():
     st.markdown(
         """
         <style>
-        body {
-            background-color: white; /* Change background color to white */
+        /* Set entire app background color to white */
+        .main {
+            background-color: white;
         }
+
+        /* Set the table font and formatting */
         table {
             font-size: 20px;
             border-collapse: collapse;
             width: 100%;
             margin-bottom: 10px;
         }
+
         th, td {
             padding: 10px;
             text-align: center;
         }
+
         th {
             background-color: #009688;
             color: white;
         }
+
+        /* Change background color of the table to white */
+        table, th, td {
+            background-color: white;
+        }
+
+        h3 {
+            text-align: center;
+            color: DarkGreen;
+        }
+
         </style>
         """,
         unsafe_allow_html=True,
     )
 
-    st.markdown("<h3 style='text-align: center; color: DarkGreen;'>Real-time Tractor Operating Parameters</h3>", unsafe_allow_html=True)
+    st.markdown("<h3>Real-time Tractor Operating Parameters</h3>", unsafe_allow_html=True)
 
     # Dropdown for gear selection
     gear_options = {"L1": 160, "L2": 120, "L3": 80, "L4": 40, "H1": 30}
@@ -128,35 +141,35 @@ def display_parameters():
             <table>
                 <tr><th>Parameter</th><th>Value</th></tr>
                 <tr>
-                    <td><img src='https://d1nhio0ox7pgb.cloudfront.net/_img/v_collection_png/512x512/shadow/gears.png' width='30' height='30'> Gear Ratio</td>
+                    <td>Gear Ratio</td>
                     <td>{gear}</td>
                 </tr>
                 <tr>
-                    <td><img src='https://example.com/path_to_icon/engine_icon.jpg' width='30' height='30'> Engine Speed (rpm)</td>
+                    <td>Engine Speed (rpm)</td>
                     <td>{engine_speed}</td>
                 </tr>
                 <tr>
-                    <td><img src='https://example.com/path_to_icon/throttle_icon.jpg' width='30' height='30'> Throttle Setting (%)</td>
+                    <td>Throttle Setting (%)</td>
                     <td>{throttle_setting}</td>
                 </tr>
                 <tr>
-                    <td><img src='https://example.com/path_to_icon/depth_icon.jpg' width='30' height='30'> Implement Depth (cm)</td>
+                    <td>Implement Depth (cm)</td>
                     <td>{implement_depth}</td>
                 </tr>
                 <tr>
-                    <td><img src='https://example.com/path_to_icon/speed_icon.jpg' width='30' height='30'> Actual Speed (km/h)</td>
+                    <td>Actual Speed (km/h)</td>
                     <td>{actual_speed}</td>
                 </tr>
                 <tr>
-                    <td><img src='https://example.com/path_to_icon/slip_icon.jpg' width='30' height='30'> Slip (%)</td>
+                    <td>Slip (%)</td>
                     <td>{slip:.2f}</td>
                 </tr>
                 <tr>
-                    <td><img src='https://example.com/path_to_icon/gps_icon.jpg' width='30' height='30'> Latitude (N)</td>
+                    <td>Latitude (N)</td>
                     <td>{current_lat}</td>
                 </tr>
                 <tr>
-                    <td><img src='https://example.com/path_to_icon/gps_icon.jpg' width='30' height='30'> Longitude (E)</td>
+                    <td>Longitude (E)</td>
                     <td>{current_long}</td>
                 </tr>
             </table>
