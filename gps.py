@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 import folium
 from streamlit_folium import folium_static
 import matplotlib.pyplot as plt
+from PIL import Image
 
 image1 = Image.open("gear_icon.jpg")
 
