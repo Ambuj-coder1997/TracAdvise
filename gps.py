@@ -6,6 +6,8 @@ import folium
 from streamlit_folium import folium_static
 import matplotlib.pyplot as plt
 
+image1 = Image.open("gear_icon.jpg")
+
 # Function to generate parameters within given ranges
 def generate_engine_speed():
     return random.randint(1200, 1800)
@@ -32,7 +34,7 @@ def display_parameters():
         """
         <style>
         body {
-            background-color: #f5f5f5;
+            background-color: white; /* Change background color to white */
         }
         table {
             font-size: 20px;
@@ -125,35 +127,35 @@ def display_parameters():
             <table>
                 <tr><th>Parameter</th><th>Value</th></tr>
                 <tr>
-                    <td><img src='gear_icon.jpg' width='30' height='30'> Gear Ratio</td>
+                    <td><img src='image1' width='30' height='30'> Gear Ratio</td>
                     <td>{gear}</td>
                 </tr>
                 <tr>
-                    <td><img src='engine_icon.jpg' width='30' height='30'> Engine Speed (rpm)</td>
+                    <td><img src='https://example.com/path_to_icon/engine_icon.jpg' width='30' height='30'> Engine Speed (rpm)</td>
                     <td>{engine_speed}</td>
                 </tr>
                 <tr>
-                    <td><img src='throttle_icon.jpg' width='30' height='30'> Throttle Setting (%)</td>
+                    <td><img src='https://example.com/path_to_icon/throttle_icon.jpg' width='30' height='30'> Throttle Setting (%)</td>
                     <td>{throttle_setting}</td>
                 </tr>
                 <tr>
-                    <td><img src='depth_icon.jpg' width='30' height='30'> Implement Depth (cm)</td>
+                    <td><img src='https://example.com/path_to_icon/depth_icon.jpg' width='30' height='30'> Implement Depth (cm)</td>
                     <td>{implement_depth}</td>
                 </tr>
                 <tr>
-                    <td><img src='speed_icon.jpg' width='30' height='30'> Actual Speed (km/h)</td>
+                    <td><img src='https://example.com/path_to_icon/speed_icon.jpg' width='30' height='30'> Actual Speed (km/h)</td>
                     <td>{actual_speed}</td>
                 </tr>
                 <tr>
-                    <td><img src='slip_icon.jpg' width='30' height='30'> Slip (%)</td>
+                    <td><img src='https://example.com/path_to_icon/slip_icon.jpg' width='30' height='30'> Slip (%)</td>
                     <td>{slip:.2f}</td>
                 </tr>
                 <tr>
-                    <td><img src='gps_icon.jpg' width='30' height='30'> Latitude (N)</td>
+                    <td><img src='https://example.com/path_to_icon/gps_icon.jpg' width='30' height='30'> Latitude (N)</td>
                     <td>{current_lat}</td>
                 </tr>
                 <tr>
-                    <td><img src='gps_icon.jpg' width='30' height='30'> Longitude (E)</td>
+                    <td><img src='https://example.com/path_to_icon/gps_icon.jpg' width='30' height='30'> Longitude (E)</td>
                     <td>{current_long}</td>
                 </tr>
             </table>
