@@ -147,7 +147,7 @@ def display_parameters():
         # Create table with icons
         table_content = f"""
         <table>
-            <tr><th>Parameter</th><th>Value</th></tr>
+            <tr><th><b>Parameter</b></th><th><b>Value</b></th></tr>
             <tr>
                 <td><img src="{icon_url['Gear Ratio']}" width="30"> Gear Ratio</td>
                 <td>{gear}</td>
