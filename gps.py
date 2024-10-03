@@ -31,45 +31,29 @@ def display_parameters():
     st.markdown(
         """
         <style>
-        /* Set entire app background color to white */
-        .main {
-            background-color: white;
+        body {
+            background-color: #f5f5f5;
         }
-
-        /* Set the table font and formatting */
         table {
             font-size: 20px;
             border-collapse: collapse;
             width: 100%;
             margin-bottom: 10px;
         }
-
         th, td {
             padding: 10px;
             text-align: center;
         }
-
         th {
             background-color: #009688;
             color: white;
         }
-
-        /* Change background color of the table to white */
-        table, th, td {
-            background-color: white;
-        }
-
-        h3 {
-            text-align: center;
-            color: DarkGreen;
-        }
-
         </style>
         """,
         unsafe_allow_html=True,
     )
 
-    st.markdown("<h3>Real-time Tractor Operating Parameters</h3>", unsafe_allow_html=True)
+    st.markdown("<h3 style='text-align: center; color: DarkGreen;'>Real-time Tractor Operating Parameters</h3>", unsafe_allow_html=True)
 
     # Dropdown for gear selection
     gear_options = {"L1": 160, "L2": 120, "L3": 80, "L4": 40, "H1": 30}
@@ -133,7 +117,7 @@ def display_parameters():
         ]
 
         # Split the layout into two columns
-        col1, col2 = st.columns([1, 3])  # Left column is smaller than right column
+        col1, col2 = st.columns([2, 3])  # Left column is smaller than right column
 
         with col1:
             # Display the updated parameters in a table with the GPS map below
@@ -141,35 +125,35 @@ def display_parameters():
             <table>
                 <tr><th>Parameter</th><th>Value</th></tr>
                 <tr>
-                    <td>Gear Ratio</td>
+                    <td><img src='gear_icon.jpg' width='30' height='30'> Gear Ratio</td>
                     <td>{gear}</td>
                 </tr>
                 <tr>
-                    <td>Engine Speed (rpm)</td>
+                    <td><img src='engine_icon.jpg' width='30' height='30'> Engine Speed (rpm)</td>
                     <td>{engine_speed}</td>
                 </tr>
                 <tr>
-                    <td>Throttle Setting (%)</td>
+                    <td><img src='throttle_icon.jpg' width='30' height='30'> Throttle Setting (%)</td>
                     <td>{throttle_setting}</td>
                 </tr>
                 <tr>
-                    <td>Implement Depth (cm)</td>
+                    <td><img src='depth_icon.jpg' width='30' height='30'> Implement Depth (cm)</td>
                     <td>{implement_depth}</td>
                 </tr>
                 <tr>
-                    <td>Actual Speed (km/h)</td>
+                    <td><img src='speed_icon.jpg' width='30' height='30'> Actual Speed (km/h)</td>
                     <td>{actual_speed}</td>
                 </tr>
                 <tr>
-                    <td>Slip (%)</td>
+                    <td><img src='slip_icon.jpg' width='30' height='30'> Slip (%)</td>
                     <td>{slip:.2f}</td>
                 </tr>
                 <tr>
-                    <td>Latitude (N)</td>
+                    <td><img src='gps_icon.jpg' width='30' height='30'> Latitude (N)</td>
                     <td>{current_lat}</td>
                 </tr>
                 <tr>
-                    <td>Longitude (E)</td>
+                    <td><img src='gps_icon.jpg' width='30' height='30'> Longitude (E)</td>
                     <td>{current_long}</td>
                 </tr>
             </table>
@@ -187,28 +171,19 @@ def display_parameters():
                 folium_static(m, width=400, height=300)
 
         with col2:
-            # Plot the real-time data on the right with dots and shaded areas
+            # Plot the real-time data on the right
             fig, ax = plt.subplots(5, 1, figsize=(10, 15), sharex=True)
 
-            ax[0].plot(time_stamps, engine_speed_values, label="Engine Speed (rpm)", color='blue', marker='o')
-            ax[0].fill_between(time_stamps, engine_speed_values, color='blue', alpha=0.2)
-
-            ax[1].plot(time_stamps, throttle_values, label="Throttle Setting (%)", color='green', marker='o')
-            ax[1].fill_between(time_stamps, throttle_values, color='green', alpha=0.2)
-
-            ax[2].plot(time_stamps, implement_depth_values, label="Implement Depth (cm)", color='purple', marker='o')
-            ax[2].fill_between(time_stamps, implement_depth_values, color='purple', alpha=0.2)
-
-            ax[3].plot(time_stamps, forward_speed_values, label="Actual Speed (km/h)", color='orange', marker='o')
-            ax[3].fill_between(time_stamps, forward_speed_values, color='orange', alpha=0.2)
-
-            ax[4].plot(time_stamps, slip_values, label="Slip (%)", color='red', marker='o')
-            ax[4].fill_between(time_stamps, slip_values, color='red', alpha=0.2)
+            ax[0].plot(time_stamps, engine_speed_values, label="Engine Speed (rpm)", color='blue')
+            ax[1].plot(time_stamps, throttle_values, label="Throttle Setting (%)", color='green')
+            ax[2].plot(time_stamps, implement_depth_values, label="Implement Depth (cm)", color='purple')
+            ax[3].plot(time_stamps, forward_speed_values, label="Actual Speed (km/h)", color='orange')
+            ax[4].plot(time_stamps, slip_values, label="Slip (%)", color='red')
 
             for i, axis in enumerate(ax):
                 axis.legend(loc="upper right")
                 axis.grid(True)
-
+            
             ax[-1].set_xlabel("Time (s)")
 
             with graph_placeholder:
