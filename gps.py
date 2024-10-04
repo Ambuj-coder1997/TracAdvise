@@ -215,13 +215,12 @@ def display_parameters():
         graph_placeholder.pyplot(fig)
 
         # Create and display satellite map below plot
-        m = folium.Map(location=[current_lat, current_long], zoom_start=15, tiles="Stamen Terrain", attr="Map data © OpenStreetMap contributors")
+        m = folium.Map(location=[current_lat, current_long], zoom_start=15)
         for coord in coordinates_list:
             folium.Marker(
                 location=[coord['latitude'], coord['longitude']],
                 popup=f"Lat: {coord['latitude']}, Long: {coord['longitude']}, Speed: {coord['speed']} km/h"
             ).add_to(m)
-
         # Display map below the real-time graph
         with map_placeholder:
             folium_static(m, width=1000, height=500)
