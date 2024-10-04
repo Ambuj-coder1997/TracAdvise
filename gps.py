@@ -28,7 +28,7 @@ def generate_longitude(current_long):
 
 # Icon URLs for the table
 icon_url = {
-    "Gear Ratio": "https://cdn-icons-png.flaticon.com/128/3043/3043430.png",
+    "Gear Ratio": "gear_ratio.jpg",
     "Engine Speed": "https://cdn-icons-png.flaticon.com/128/1828/1828919.png",
     "Throttle Setting": "https://cdn-icons-png.flaticon.com/128/2179/2179127.png",
     "Implement Depth": "https://cdn-icons-png.flaticon.com/128/3349/3349386.png",
@@ -152,7 +152,7 @@ def display_parameters():
             <td><b>Value</b></td>
             </tr>
             <tr>
-                <td><img src="{icon_url['Gear Ratio']}" width="30"> Gear Ratio</td>
+                <td><img src="{icon_path['Gear Ratio']}" width="30"> Gear Ratio</td>
                 <td>{gear}</td>
             </tr>
             <tr>
