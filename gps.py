@@ -152,35 +152,35 @@ def display_parameters():
             <td><b>Value</b></td>
             </tr>
             <tr>
-                <td><img src="{icon_url['Gear Ratio']}" width="30"> Gear Ratio</td>
+                <td><img src="{icon_url['Gear Ratio']}" width="50"> Gear Ratio</td>
                 <td>{gear}</td>
             </tr>
             <tr>
-                <td><img src="{icon_url['Engine Speed']}" width="30"> Engine Speed (rpm)</td>
+                <td><img src="{icon_url['Engine Speed']}" width="50"> Engine Speed (rpm)</td>
                 <td>{engine_speed}</td>
             </tr>
             <tr>
-                <td><img src="{icon_url['Throttle Setting']}" width="30"> Throttle Setting (%)</td>
+                <td><img src="{icon_url['Throttle Setting']}" width="50"> Throttle Setting (%)</td>
                 <td>{throttle_setting}</td>
             </tr>
             <tr>
-                <td><img src="{icon_url['Implement Depth']}" width="30"> Implement Depth (cm)</td>
+                <td><img src="{icon_url['Implement Depth']}" width="50"> Implement Depth (cm)</td>
                 <td>{implement_depth}</td>
             </tr>
             <tr>
-                <td><img src="{icon_url['Actual Speed']}" width="30"> Actual Speed (km/h)</td>
+                <td><img src="{icon_url['Actual Speed']}" width="50"> Actual Speed (km/h)</td>
                 <td>{actual_speed}</td>
             </tr>
             <tr>
-                <td><img src="{icon_url['Slip']}" width="30"> Slip (%)</td>
+                <td><img src="{icon_url['Slip']}" width="50"> Slip (%)</td>
                 <td>{slip:.2f}</td>
             </tr>
             <tr>
-                <td><img src="{icon_url['Latitude']}" width="30"> Latitude (N)</td>
+                <td><img src="{icon_url['Latitude']}" width="50"> Latitude (N)</td>
                 <td>{current_lat}</td>
             </tr>
             <tr>
-                <td><img src="{icon_url['Longitude']}" width="30"> Longitude (E)</td>
+                <td><img src="{icon_url['Longitude']}" width="50"> Longitude (E)</td>
                 <td>{current_long}</td>
             </tr>
         </table>
