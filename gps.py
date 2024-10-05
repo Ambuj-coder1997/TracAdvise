@@ -14,7 +14,7 @@ def generate_throttle_setting():
     return random.randint(45, 85)
 
 def generate_implement_depth():
-    return random.uniform(5, 45)
+    return round(random.uniform(5, 45),2)
 
 def generate_actual_forward_speed():
     return round(random.uniform(0.8, 4.5), 2)
