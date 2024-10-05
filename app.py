@@ -1,6 +1,6 @@
 import streamlit as st
 from gps import show_gps_page
-from speednslip import show_speednslip_page
+from speednslip import display_parameters
 from fc import show_fc_page
 from PIL import Image
 #import sys
