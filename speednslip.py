@@ -141,35 +141,35 @@ def display_parameters():
     for i, params in enumerate(calculated_parameters):
         table_content += f"""
         <tr>
-            <td><img src="{icon_url['Engine Torque']}" width="30"> Engine Torque (Nm)</td>
+            <td><img src="{icon_url['Engine Torque']}" width="50"> Engine Torque (Nm)</td>
             <td>{params['engine_torque']:.2f}</td>
         </tr>
         <tr>
-            <td><img src="{icon_url['Fuel Consumption']}" width="30"> Fuel Consumption (L/h)</td>
+            <td><img src="{icon_url['Fuel Consumption']}" width="50"> Fuel Consumption (L/h)</td>
             <td>{params['fuel_consumption']:.2f}</td>
         </tr>
         <tr>
-            <td><img src="{icon_url['Engine Power']}" width="30"> Engine Power (hp)</td>
+            <td><img src="{icon_url['Engine Power']}" width="50"> Engine Power (hp)</td>
             <td>{params['engine_power']:.2f}</td>
         </tr>
         <tr>
-            <td><img src="{icon_url['Specific Fuel Consumption']}" width="30"> Specific Fuel Consumption (kg/hp-hr)</td>
+            <td><img src="{icon_url['Specific Fuel Consumption']}" width="50"> Specific Fuel Consumption (kg/hp-hr)</td>
             <td>{params['specific_fuel_consumption']:.2f}</td>
         </tr>
         <tr>
-            <td><img src="{icon_url['Fuel Consumption per Tilled Area']}" width="30"> Fuel Consumption per Tilled Area (L/ha)</td>
+            <td><img src="{icon_url['Fuel Consumption per Tilled Area']}" width="50"> Fuel Consumption per Tilled Area (L/ha)</td>
             <td>{params['fuel_consumption_area']:.2f}</td>
         </tr>
         <tr>
-            <td><img src="{icon_url['Implement Draft']}" width="30"> Implement Draft (kN)</td>
+            <td><img src="{icon_url['Implement Draft']}" width="50"> Implement Draft (kN)</td>
             <td>{params['implement_draft']:.2f}</td>
         </tr>
         <tr>
-            <td><img src="{icon_url['Drawbar Power']}" width="30"> Drawbar Power (kW)</td>
+            <td><img src="{icon_url['Drawbar Power']}" width="50"> Drawbar Power (kW)</td>
             <td>{params['drawbar_power']:.2f}</td>
         </tr>
         <tr>
-            <td><img src="{icon_url['Tractive Efficiency']}" width="30"> Tractive Efficiency (%)</td>
+            <td><img src="{icon_url['Tractive Efficiency']}" width="50"> Tractive Efficiency (%)</td>
             <td>{params['tractive_efficiency']:.2f}</td>
         </tr>
         """
