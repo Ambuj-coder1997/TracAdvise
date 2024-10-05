@@ -165,12 +165,12 @@ def display_parameters():
 
     # Display the table
      # Display the table
-table_content = """
-<table>
-    <tr><th>Parameter</th><th>Value</th></tr>
-"""
-for params in calculated_parameters:
-    table_content += f"""
+    table_content = """
+    <table>
+        <tr><th>Parameter</th><th>Value</th></tr>
+    """
+    for params in calculated_parameters:
+        table_content += f"""
     <tr>
         <td><img src="{icon_url['Engine Torque']}" width="50"> Engine Torque (Nm)</td>
         <td>{params['engine_torque']:.2f}</td>
