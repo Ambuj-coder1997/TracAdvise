@@ -5,7 +5,8 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 
 # Import values from the gps.py page
-from gps import throttle_values, engine_speed_values, implement_depth_values, forward_speed_values, slip_values
+#from gps import throttle_values, engine_speed_values, implement_depth_values, forward_speed_values, slip_values
+from src.gps import throttle_values, engine_speed_values, implement_depth_values, forward_speed_values, slip_values
 
 # Icon paths for the table
 icon_url = {
