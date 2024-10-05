@@ -28,14 +28,14 @@ def generate_longitude(current_long):
 
 # Icon URLs for the table
 icon_url = {
-    "Gear Ratio": "gear_ratio.jpg",
-    "Engine Speed": "https://cdn-icons-png.flaticon.com/128/1828/1828919.png",
-    "Throttle Setting": "https://cdn-icons-png.flaticon.com/128/2179/2179127.png",
-    "Implement Depth": "https://cdn-icons-png.flaticon.com/128/3349/3349386.png",
-    "Actual Speed": "https://cdn-icons-png.flaticon.com/128/1828/1828899.png",
-    "Slip": "https://cdn-icons-png.flaticon.com/128/2938/2938105.png",
-    "Latitude": "https://cdn-icons-png.flaticon.com/128/684/684908.png",
-    "Longitude": "https://cdn-icons-png.flaticon.com/128/684/684908.png"
+    "Gear Ratio": "https://fractory.com/wp-content/uploads/2020/09/Types-of-Gears.jpg",
+    "Engine Speed": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTKyBS49iMPrJ85c0wm2X8ZQOU3K5CC4UIFh-9llBUeX0Q5Rxg8",
+    "Throttle Setting": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqfyK_C2nQ7d2DbmoCG86HNJlPMjPmtkVkACmf2xovDLvVzjzW",
+    "Implement Depth": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQXreG2Omv2h0DHS11b3KiY44Wij_WkqDJqIvjj-dPi4W-fQH1y",
+    "Actual Speed": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTiwlixO0PSmDO-L67wHdYR0TChKAWNaRgYqa2nTrknkfv4nO7F",
+    "Slip": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSvNzAhdKuoz6EivK0C1VqTLyUjccS8RU_t5PVG2rppTKTOftuM",
+    "Latitude": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQobjC9X-TpXb8FtwTBAYyoKVzTdCLBtdSlsz-p0vTt2vd6ll1b",
+    "Longitude": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQobjC9X-TpXb8FtwTBAYyoKVzTdCLBtdSlsz-p0vTt2vd6ll1b"
 }
 
 # Main function to display tractor parameters
@@ -152,7 +152,7 @@ def display_parameters():
             <td><b>Value</b></td>
             </tr>
             <tr>
-                <td><img src="{icon_path['Gear Ratio']}" width="30"> Gear Ratio</td>
+                <td><img src="{icon_url['Gear Ratio']}" width="30"> Gear Ratio</td>
                 <td>{gear}</td>
             </tr>
             <tr>
