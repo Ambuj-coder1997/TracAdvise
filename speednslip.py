@@ -152,7 +152,7 @@ def display_parameters():
         unsafe_allow_html=True,
     )
 
-    st.markdown("<h3>Real-time Tractor Operating Parameters</h3>", unsafe_allow_html=True)
+    st.markdown("<h1>Real-time Tractor Performance Prediction</h1>", unsafe_allow_html=True)
 
     # Initialize placeholders for output and graph
     output_placeholder = st.empty()
