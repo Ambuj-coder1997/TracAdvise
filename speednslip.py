@@ -1,116 +1,209 @@
 import streamlit as st
 import random
 import time
+from datetime import datetime
+import matplotlib.pyplot as plt
 
-def generate_actual_speed():
-    return round(random.uniform(0.78, 1.28), 2)
+# Import values from the gps.py page
+from gps import throttle_values, engine_speed_values, implement_depth_values, forward_speed_values, slip_values
 
-def generate_theoretical_speed():
-    return round(random.uniform(1.16, 1.23), 2)
+# Icon paths for the table
+icon_url = {
+    "Engine Torque": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQhkTm5C6-djVM3yJ6DZ--Yc3axxHSxT8RHVYB4Dthor-vWVhc4",
+    "Fuel Consumption": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqc4p4DyeU5I0AzNnl7w1rYwsQrq3vV4ylviuU9JSy7g63vv0L",
+    "Engine Power": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcT0tSZjxD2nNXkGho7aCY3RdK-2SKylAUgV_XXxGGvnb3nIqhmq",
+    "Specific Fuel Consumption": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXJIQWbLE_0DwM4BmilBbQIFC08CrGHqnKgMZM4Gv6YjuF0DdK",
+    "Fuel Consumption per Tilled Area": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQSUYRAAJNfkU0TtLoT7qmjouHO46frWiqYOppmIGytCzbORik9",
+    "Implement Draft": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfbucYctsmUEAm34Ja4Xxgb1nVtv5comnkGPqqvwJVJAl7L0RY",
+    "Drawbar Power": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkoQm9oof_qXb12jIbTZI3U5iI5MRV21ONG9GoW0LI65XZ1svq",
+    "Tractive Efficiency": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ8mr5HjL2hNmNZzCD63O5KszeL0khnYGNUd09ang3WgtXCUCZm",
+}
 
-def generate_wheel_slip():
-    return random.randint(15, 37)
+# Function to calculate additional parameters based on imported values
+def calculate_parameters():
+    parameters = []
 
-def check_wheel_slip_status(wheel_slip):
-    threshold = 20
-    if wheel_slip > threshold:
-        return "Over Limit", "red"  # Color for 'Over Limit' text
-    else:
-        return "Safe Limit", "green"  # Color for 'Safe Limit' text
+    for i in range(len(throttle_values)):
+        # Calculate z and r
+        z = 24.49 * throttle_values[i] + 42.483
+        r = z - engine_speed_values[i]
 
+        # Engine torque (Nm)
+        ent = (
+            (r ** 3 * z ** 2) * (8.5558 * pow(10, -13)) +
+            (r ** 2 * z ** 2) * (-5.086 * pow(10, -9)) +
+            (r * z ** 2) * (3.1619 * pow(10, -7)) +
+            (r ** 3 * z) * (-1.909 * pow(10, -8)) +
+            (r ** 2 * z) * (1.5683 * pow(10, -5)) +
+            (r * z) * (-0.000435357) + 5.93541932
+        )
+
+        # Fuel consumption (L/h)
+        fcp = (
+            (z ** 3 * r ** 2) * (-2.2978 * pow(10, -25)) +
+            (z ** 2 * r ** 2) * (-3.0631 * pow(10, -11)) +
+            (z ** 3 * r) * (-5.2523 * pow(10, -23)) +
+            (z ** 2 * r) * (1.60046 * pow(10, -8)) +
+            (z ** 3) * (-5.60937 * pow(10, -21)) + 1.342006549
+        )
+
+        # Engine power (hp)
+        enp = (2 * 3.14 * engine_speed_values[i] * ent) / (60 * 746)
+
+        # Specific fuel consumption (kg/hp-hr)
+        sfc = (fcp * 840) / enp if enp != 0 else 0
+
+        # Fuel consumption per tilled area (L/ha)
+        FC = (fcp * 10) / (0.6 * forward_speed_values[i]) if forward_speed_values[i] != 0 else 0
+
+        # Implement draft (kN)
+        draft = 0.78 * (652 + 5.1 * forward_speed_values[i] ** 2) * 0.6 * implement_depth_values[i]
+
+        # Drawbar power (dbp)
+        dbp = 0.3723 * (draft * forward_speed_values[i])
+
+        # Tractive efficiency (%)
+        te = dbp * (100 - slip_values[i]) / (0.9 * enp) if enp != 0 else 0
+
+        # Store calculated values
+        parameters.append({
+            'engine_torque': ent,
+            'fuel_consumption': fcp,
+            'engine_power': enp,
+            'specific_fuel_consumption': sfc,
+            'fuel_consumption_area': FC,
+            'implement_draft': draft,
+            'drawbar_power': dbp,
+            'tractive_efficiency': te
+        })
+
+    return parameters
+
+# Main function to display tractor parameters
 def display_parameters():
-    #st.title("Real-time Speed and Slip Parameters Display")
-    page_bg_img = '''
-    <style>
-    body {
-    background-image: logo.png;
-    background-size: cover;
-    }
-    </style>
-    '''
-
-    st.markdown(page_bg_img, unsafe_allow_html=True)
     st.markdown(
         """
         <style>
-        body {
-            background-color: #f5f5f5; /* Change background color */
+        /* Set entire app background color to white */
+        .main {
+            background-color: white;
         }
+
+        /* Set the table font and formatting */
         table {
-            font-size: 20px; /* Set font size */
+            font-size: 25px;
             border-collapse: collapse;
-            width: 50%;
-            margin-bottom: 20px;
-            margin-left: auto;
-            margin-right: auto;
+            width: 100%;
+            margin-bottom: 10px;
         }
+
         th, td {
             padding: 10px;
             text-align: center;
         }
+
         th {
-            background-color: #a903fc; /* Change table header color */
-            color: white; /* Change table header text color */
+            background-color: white;
+            color: black;
         }
-        .over-limit {
-            color: red; /* Change font color for 'Over Limit' */
+
+        /* Change background color of the table to white */
+        table, th, td {
+            background-color: white;
         }
-        .safe-limit {
-            color: green; /* Change font color for 'Safe Limit' */
+
+        h3 {
+            text-align: center;
+            color: black;
         }
+
         </style>
         """,
         unsafe_allow_html=True,
     )
-    col1, col2, col3 = st.columns([1, 1, 1])
 
-    with col1:
-        st.write("")
+    st.markdown("<h3>Real-time Tractor Operating Parameters</h3>", unsafe_allow_html=True)
 
-    with col2:
-        st.image("speed.png")
-
-    with col3:
-        st.write("")
-
+    # Initialize placeholders for output and graph
     output_placeholder = st.empty()
+    graph_placeholder = st.empty()
 
-    while True:
-        actual_speed = generate_actual_speed()
-        theoretical_speed = generate_theoretical_speed()
-        wheel_slip = generate_wheel_slip()
-        wheel_slip_status, color = check_wheel_slip_status(wheel_slip)
+    # Calculate all the parameters
+    calculated_parameters = calculate_parameters()
 
-        output_content = f"""
-        <table>
-            <tr>
-                <th>Parameter</th>
-                <th>Value</th>
-            </tr>
-            <tr>
-                <td>Actual Speed (m/s)</td>
-                <td>{actual_speed}</td>
-            </tr>
-            <tr>
-                <td>Theoretical Speed (m/s)</td>
-                <td>{theoretical_speed}</td>
-            </tr>
-            <tr>
-                <td>Wheel Slip (%)</td>
-                <td>{wheel_slip}</td>
-            </tr>
-            <tr>
-                <td>Wheel Slip Status</td>
-                <td class="{wheel_slip_status.lower().replace(' ', '-')}">{wheel_slip_status}</td>
-            </tr>
-        </table>
+    time_stamps = list(range(len(throttle_values)))  # Using index as timestamps for simplicity
+
+    # Display the table
+    table_content = f"""
+    <table>
+        <tr><th>Parameter</th><th>Value</th></tr>
+    """
+    for i, params in enumerate(calculated_parameters):
+        table_content += f"""
+        <tr>
+            <td><img src="{icon_url['Engine Torque']}" width="30"> Engine Torque (Nm)</td>
+            <td>{params['engine_torque']:.2f}</td>
+        </tr>
+        <tr>
+            <td><img src="{icon_url['Fuel Consumption']}" width="30"> Fuel Consumption (L/h)</td>
+            <td>{params['fuel_consumption']:.2f}</td>
+        </tr>
+        <tr>
+            <td><img src="{icon_url['Engine Power']}" width="30"> Engine Power (hp)</td>
+            <td>{params['engine_power']:.2f}</td>
+        </tr>
+        <tr>
+            <td><img src="{icon_url['Specific Fuel Consumption']}" width="30"> Specific Fuel Consumption (kg/hp-hr)</td>
+            <td>{params['specific_fuel_consumption']:.2f}</td>
+        </tr>
+        <tr>
+            <td><img src="{icon_url['Fuel Consumption per Tilled Area']}" width="30"> Fuel Consumption per Tilled Area (L/ha)</td>
+            <td>{params['fuel_consumption_area']:.2f}</td>
+        </tr>
+        <tr>
+            <td><img src="{icon_url['Implement Draft']}" width="30"> Implement Draft (kN)</td>
+            <td>{params['implement_draft']:.2f}</td>
+        </tr>
+        <tr>
+            <td><img src="{icon_url['Drawbar Power']}" width="30"> Drawbar Power (kW)</td>
+            <td>{params['drawbar_power']:.2f}</td>
+        </tr>
+        <tr>
+            <td><img src="{icon_url['Tractive Efficiency']}" width="30"> Tractive Efficiency (%)</td>
+            <td>{params['tractive_efficiency']:.2f}</td>
+        </tr>
         """
+    table_content += "</table>"
 
-        output_placeholder.markdown(output_content, unsafe_allow_html=True)
-        time.sleep(1)  # Display for 3 seconds
+    output_placeholder.markdown(table_content, unsafe_allow_html=True)
 
-        output_placeholder.empty()  # Clear the content for new data
-        #time.sleep(1)  # Add a small delay before displaying new data
-def show_speednslip_page():
-    st.markdown("<h3 style='text-align: center; color: #031cfc;'>Real-time Speed and Slip Parameters Display</h3>", unsafe_allow_html=True)
+    # Plot the real-time data on the right with dots and shaded areas
+    fig, ax = plt.subplots(5, 1, figsize=(10, 15), sharex=True)
+
+    ax[0].plot(time_stamps, throttle_values, label="Throttle Setting (%)", color='green', marker='o')
+    ax[0].fill_between(time_stamps, throttle_values, color='green', alpha=0.2)
+
+    ax[1].plot(time_stamps, engine_speed_values, label="Engine Speed (rpm)", color='blue', marker='o')
+    ax[1].fill_between(time_stamps, engine_speed_values, color='blue', alpha=0.2)
+
+    ax[2].plot(time_stamps, forward_speed_values, label="Actual Speed (km/h)", color='orange', marker='o')
+    ax[2].fill_between(time_stamps, forward_speed_values, color='orange', alpha=0.2)
+
+    ax[3].plot(time_stamps, implement_depth_values, label="Implement Depth (cm)", color='purple', marker='o')
+    ax[3].fill_between(time_stamps, implement_depth_values, color='purple', alpha=0.2)
+
+    ax[4].plot(time_stamps, slip_values, label="Slip (%)", color='red', marker='o')
+    ax[4].fill_between(time_stamps, slip_values, color='red', alpha=0.2)
+
+    for axis in ax:
+        axis.legend(loc="upper right")
+        axis.grid(True)
+
+    ax[-1].set_xlabel("Time")
+
+    # Display plot
+    graph_placeholder.pyplot(fig)
+
+# Call the GPS page to run the app
+if __name__ == "__main__":
     display_parameters()
