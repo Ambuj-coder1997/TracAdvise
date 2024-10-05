@@ -207,6 +207,16 @@ def display_parameters():
 
     output_placeholder.markdown(table_content, unsafe_allow_html=True)
 
+    # Extract parameters for plotting
+    engine_torque = [params['engine_torque'] for params in calculated_parameters]
+    fuel_consumption = [params['fuel_consumption'] for params in calculated_parameters]
+    engine_power = [params['engine_power'] for params in calculated_parameters]
+    specific_fuel_consumption = [params['specific_fuel_consumption'] for params in calculated_parameters]
+    fuel_consumption_area = [params['fuel_consumption_area'] for params in calculated_parameters]
+    implement_draft = [params['implement_draft'] for params in calculated_parameters]
+    drawbar_power = [params['drawbar_power'] for params in calculated_parameters]
+    tractive_efficiency = [params['tractive_efficiency'] for params in calculated_parameters]
+
     # Plot the real-time data on the right with dots and shaded areas
     fig, ax = plt.subplots(8, 1, figsize=(10, 15), sharex=True)
 
@@ -242,6 +252,7 @@ def display_parameters():
 
     # Display plot
     graph_placeholder.pyplot(fig)
+
 
 # Call the display function
 if __name__ == "__main__":
