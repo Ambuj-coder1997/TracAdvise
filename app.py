@@ -15,7 +15,7 @@ if page == "Tractor Operating Parameters":
     show_gps_page()
 else:
     if page == "Tractor Performance Prediction":
-        show_speednslip_page()
+        display_parameters()
     else:
         if page == "Tractor Advisory System":
             show_fc_page()
