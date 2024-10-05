@@ -164,48 +164,50 @@ def display_parameters():
     time_stamps = list(range(len(throttle_values)))
 
     # Display the table
-    table_content = f"""
-    <table>
-        <tr><th>Parameter</th><th>Value</th></tr>
+     # Display the table
+table_content = """
+<table>
+    <tr><th>Parameter</th><th>Value</th></tr>
+"""
+for params in calculated_parameters:
+    table_content += f"""
+    <tr>
+        <td><img src="{icon_url['Engine Torque']}" width="50"> Engine Torque (Nm)</td>
+        <td>{params['engine_torque']:.2f}</td>
+    </tr>
+    <tr>
+        <td><img src="{icon_url['Fuel Consumption']}" width="50"> Fuel Consumption (L/h)</td>
+        <td>{params['fuel_consumption']:.2f}</td>
+    </tr>
+    <tr>
+        <td><img src="{icon_url['Engine Power']}" width="50"> Engine Power (hp)</td>
+        <td>{params['engine_power']:.2f}</td>
+    </tr>
+    <tr>
+        <td><img src="{icon_url['Specific Fuel Consumption']}" width="50"> Specific Fuel Consumption (kg/hp-hr)</td>
+        <td>{params['specific_fuel_consumption']:.2f}</td>
+    </tr>
+    <tr>
+        <td><img src="{icon_url['Fuel Consumption per Tilled Area']}" width="50"> Fuel Consumption per Tilled Area (L/ha)</td>
+        <td>{params['fuel_consumption_area']:.2f}</td>
+    </tr>
+    <tr>
+        <td><img src="{icon_url['Implement Draft']}" width="50"> Implement Draft (kN)</td>
+        <td>{params['implement_draft']:.2f}</td>
+    </tr>
+    <tr>
+        <td><img src="{icon_url['Drawbar Power']}" width="50"> Drawbar Power (hp)</td>
+        <td>{params['drawbar_power']:.2f}</td>
+    </tr>
+    <tr>
+        <td><img src="{icon_url['Tractive Efficiency']}" width="50"> Tractive Efficiency (%)</td>
+        <td>{params['tractive_efficiency']:.2f}</td>
+    </tr>
     """
-    for i, params in enumerate(calculated_parameters):
-        table_content += f"""
-        <tr>
-            <td><img src="{icon_url['Engine Torque']}" width="50"> Engine Torque (Nm)</td>
-            <td>{params['engine_torque']:.2f}</td>
-        </tr>
-        <tr>
-            <td><img src="{icon_url['Fuel Consumption']}" width="50"> Fuel Consumption (L/h)</td>
-            <td>{params['fuel_consumption']:.2f}</td>
-        </tr>
-        <tr>
-            <td><img src="{icon_url['Engine Power']}" width="50"> Engine Power (hp)</td>
-            <td>{params['engine_power']:.2f}</td>
-        </tr>
-        <tr>
-            <td><img src="{icon_url['Specific Fuel Consumption']}" width="50"> Specific Fuel Consumption (kg/hp-hr)</td>
-            <td>{params['specific_fuel_consumption']:.2f}</td>
-        </tr>
-        <tr>
-            <td><img src="{icon_url['Fuel Consumption per Tilled Area']}" width="50"> Fuel Consumption per Tilled Area (L/ha)</td>
-            <td>{params['fuel_consumption_area']:.2f}</td>
-        </tr>
-        <tr>
-            <td><img src="{icon_url['Implement Draft']}" width="50"> Implement Draft (kN)</td>
-            <td>{params['implement_draft']:.2f}</td>
-        </tr>
-        <tr>
-            <td><img src="{icon_url['Drawbar Power']}" width="50"> Drawbar Power (hp)</td>
-            <td>{params['drawbar_power']:.2f}</td>
-        </tr>
-        <tr>
-            <td><img src="{icon_url['Tractive Efficiency']}" width="50"> Tractive Efficiency (%)</td>
-            <td>{params['tractive_efficiency']:.2f}</td>
-        </tr>
-        """
-    table_content += "</table>"
+table_content += "</table>"
 
-    output_placeholder.markdown(table_content, unsafe_allow_html=True)
+output_placeholder.markdown(table_content, unsafe_allow_html=True)
+ 
 
     # Extract parameters for plotting
     engine_torque = [params['engine_torque'] for params in calculated_parameters]
