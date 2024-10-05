@@ -3,6 +3,9 @@ from gps import show_gps_page
 from speednslip import show_speednslip_page
 from fc import show_fc_page
 from PIL import Image
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 image = Image.open("logo.png")
 st.sidebar.image(image)
 st.sidebar.title("An AI-IoT based Tractor Field Performance Monitoring cum Advisory System for Optimum Tillage")
