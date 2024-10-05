@@ -81,7 +81,7 @@ def display_parameters():
         unsafe_allow_html=True,
     )
 
-    st.markdown("<h3>Real-time Tractor Operating Parameters</h3>", unsafe_allow_html=True)
+    st.markdown("<h1>Real-time Tractor Operating Parameters</h1>", unsafe_allow_html=True)
 
     # Dropdown for gear selection
     gear_options = {"L1": 160, "L2": 120, "L3": 80, "L4": 40, "H1": 30}
