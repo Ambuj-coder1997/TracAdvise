@@ -156,37 +156,54 @@ def display_parameters():
             <tr><th>Parameter</th><th>Value</th></tr>
         """
         table_content += f"""
-        <tr><td><img src="{icon_url['Engine Torque']}" width="24"/> Engine Torque (Nm)</td><td>{params['engine_torque']:.2f}</td></tr>
-        <tr><td><img src="{icon_url['Fuel Consumption']}" width="24"/> Fuel Consumption (L/h)</td><td>{params['fuel_consumption']:.2f}</td></tr>
-        <tr><td><img src="{icon_url['Engine Power']}" width="24"/> Engine Power (hp)</td><td>{params['engine_power']:.2f}</td></tr>
-        <tr><td><img src="{icon_url['Specific Fuel Consumption']}" width="24"/> Specific Fuel Consumption (kg/hp-hr)</td><td>{params['specific_fuel_consumption']:.2f}</td></tr>
-        <tr><td><img src="{icon_url['Fuel Consumption per Tilled Area']}" width="24"/> Fuel Consumption per Tilled Area (L/ha)</td><td>{params['fuel_consumption_area']:.2f}</td></tr>
-        <tr><td><img src="{icon_url['Implement Draft']}" width="24"/> Implement Draft (kN)</td><td>{params['implement_draft']:.2f}</td></tr>
-        <tr><td><img src="{icon_url['Drawbar Power']}" width="24"/> Drawbar Power (hp)</td><td>{params['drawbar_power']:.2f}</td></tr>
-        <tr><td><img src="{icon_url['Tractive Efficiency']}" width="24"/> Tractive Efficiency (%)</td><td>{params['tractive_efficiency']:.2f}</td></tr>
+        <tr><td><img src="{icon_url['Engine Torque']}" width="50"/> Engine Torque (Nm)</td><td>{params['engine_torque']:.2f}</td></tr>
+        <tr><td><img src="{icon_url['Fuel Consumption']}" width="50"/> Fuel Consumption (L/h)</td><td>{params['fuel_consumption']:.2f}</td></tr>
+        <tr><td><img src="{icon_url['Engine Power']}" width="50"/> Engine Power (hp)</td><td>{params['engine_power']:.2f}</td></tr>
+        <tr><td><img src="{icon_url['Specific Fuel Consumption']}" width="50"/> Specific Fuel Consumption (kg/hp-hr)</td><td>{params['specific_fuel_consumption']:.2f}</td></tr>
+        <tr><td><img src="{icon_url['Fuel Consumption per Tilled Area']}" width="50"/> Fuel Consumption per Tilled Area (L/ha)</td><td>{params['fuel_consumption_area']:.2f}</td></tr>
+        <tr><td><img src="{icon_url['Implement Draft']}" width="50"/> Implement Draft (kN)</td><td>{params['implement_draft']:.2f}</td></tr>
+        <tr><td><img src="{icon_url['Drawbar Power']}" width="50"/> Drawbar Power (hp)</td><td>{params['drawbar_power']:.2f}</td></tr>
+        <tr><td><img src="{icon_url['Tractive Efficiency']}" width="50"/> Tractive Efficiency (%)</td><td>{params['tractive_efficiency']:.2f}</td></tr>
         """
         table_content += "</table>"
 
         # Display table
         output_placeholder.markdown(table_content, unsafe_allow_html=True)
 
-        # Plot data
-        fig, ax = plt.subplots()
-        ax.plot(time_stamps, engine_torque_values, label="Engine Torque (Nm)")
-        ax.plot(time_stamps, fuel_consumption_values, label="Fuel Consumption (L/h)")
-        ax.plot(time_stamps, engine_power_values, label="Engine Power (hp)")
-        ax.plot(time_stamps, specific_fuel_consumption_values, label="Specific Fuel Consumption (kg/hp-hr)")
-        ax.plot(time_stamps, fuel_consumption_area_values, label="Fuel Consumption per Tilled Area (L/ha)")
-        ax.plot(time_stamps, implement_draft_values, label="Implement Draft (kN)")
-        ax.plot(time_stamps, drawbar_power_values, label="Drawbar Power (hp)")
-        ax.plot(time_stamps, tractive_efficiency_values, label="Tractive Efficiency (%)")
+        # Plot the real-time data on the right with dots and shaded areas
+        fig, ax = plt.subplots(8, 1, figsize=(10, 15), sharex=True)
 
-        ax.set_xlabel("Time")
-        ax.set_ylabel("Values")
-        ax.set_title("Real-time Tractor Performance Parameters")
-        ax.legend()
+        ax[0].plot(time_stamps, engine_torque_values, label="Engine Torque (Nm)", color='green', marker='o')
+        ax[0].fill_between(time_stamps, engine_torque_values, color='green', alpha=0.2)
 
-        # Display graph
+        ax[1].plot(time_stamps, fuel_consumption_values, label="Fuel consumption (L/h)", color='blue', marker='o')
+        ax[1].fill_between(time_stamps, fuel_consumption_values, color='blue', alpha=0.2)
+
+        ax[2].plot(time_stamps, engine_power_values, label="Engine power (hp)", color='orange', marker='o')
+        ax[2].fill_between(time_stamps, engine_power_values, color='orange', alpha=0.2)
+
+        ax[3].plot(time_stamps, specific_fuel_consumption_values, label="Specific fuel consumption (kg/hp-hr)", color='purple', marker='o')
+        ax[3].fill_between(time_stamps, specific_fuel_consumption_values, color='purple', alpha=0.2)
+
+        ax[4].plot(time_stamps, fuel_consumption_area_values, label="Fuel consumption per tilled area (L/ha)", color='red', marker='o')
+        ax[4].fill_between(time_stamps, fuel_consumption_area_values, color='red', alpha=0.2)
+
+        ax[5].plot(time_stamps, implement_draft_values, label="Implement draft (kN)", color='pink', marker='o')
+        ax[5].fill_between(time_stamps, implement_draft_values, color='pink', alpha=0.2)
+
+        ax[6].plot(time_stamps, drawbar_power_values, label="Drawbar power (hp)", color='orange', marker='o')
+        ax[6].fill_between(time_stamps, drawbar_power_values, color='orange', alpha=0.2)
+
+        ax[7].plot(time_stamps, tractive_efficiency_values, label="Tractive efficiency (%)", color='blue', marker='o')
+        ax[7].fill_between(time_stamps, tractive_efficiency_values, color='blue', alpha=0.2)
+
+        for axis in ax:
+            axis.legend(loc="upper right")
+            axis.grid(True)
+
+        ax[-1].set_xlabel("Time")
+
+        # Display plot
         graph_placeholder.pyplot(fig)
 
         # Pause for a short time to simulate real-time behavior
