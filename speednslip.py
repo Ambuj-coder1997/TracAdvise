@@ -22,35 +22,35 @@ def generate_table_html(params):
     """
     table_content += f"""
     <tr>
-        <td><img src="{icon_url['Engine Torque']}" alt="icon" style="width: 20px; height: 20px;"> Engine Torque (Nm)</td>
+        <td><img src="{icon_url['Engine Torque']}" alt="icon" style="width: 40px; height: 40px;"> Engine Torque (Nm)</td>
         <td>{params['engine_torque']:.2f}</td>
     </tr>
     <tr>
-        <td><img src="{icon_url['Fuel Consumption']}" alt="icon" style="width: 20px; height: 20px;"> Fuel Consumption (L/h)</td>
+        <td><img src="{icon_url['Fuel Consumption']}" alt="icon" style="width: 40px; height: 40px;"> Fuel Consumption (L/h)</td>
         <td>{params['fuel_consumption']:.2f}</td>
     </tr>
     <tr>
-        <td><img src="{icon_url['Engine Power']}" alt="icon" style="width: 20px; height: 20px;"> Engine Power (hp)</td>
+        <td><img src="{icon_url['Engine Power']}" alt="icon" style="width: 40px; height: 40px;"> Engine Power (hp)</td>
         <td>{params['engine_power']:.2f}</td>
     </tr>
     <tr>
-        <td><img src="{icon_url['Specific Fuel Consumption']}" alt="icon" style="width: 20px; height: 20px;"> Specific Fuel Consumption (kg/hp-hr)</td>
+        <td><img src="{icon_url['Specific Fuel Consumption']}" alt="icon" style="width: 40px; height: 40px;"> Specific Fuel Consumption (kg/hp-hr)</td>
         <td>{params['specific_fuel_consumption']:.2f}</td>
     </tr>
     <tr>
-        <td><img src="{icon_url['Fuel Consumption per Tilled Area']}" alt="icon" style="width: 20px; height: 20px;"> Fuel Consumption per Tilled Area (L/ha)</td>
+        <td><img src="{icon_url['Fuel Consumption per Tilled Area']}" alt="icon" style="width: 40px; height: 40px;"> Fuel Consumption per Tilled Area (L/ha)</td>
         <td>{params['fuel_consumption_area']:.2f}</td>
     </tr>
     <tr>
-        <td><img src="{icon_url['Implement Draft']}" alt="icon" style="width: 20px; height: 20px;"> Implement Draft (kN)</td>
+        <td><img src="{icon_url['Implement Draft']}" alt="icon" style="width: 40px; height: 40px;"> Implement Draft (kN)</td>
         <td>{params['implement_draft']:.2f}</td>
     </tr>
     <tr>
-        <td><img src="{icon_url['Drawbar Power']}" alt="icon" style="width: 20px; height: 20px;"> Drawbar Power (hp)</td>
+        <td><img src="{icon_url['Drawbar Power']}" alt="icon" style="width: 40px; height: 40px;"> Drawbar Power (hp)</td>
         <td>{params['drawbar_power']:.2f}</td>
     </tr>
     <tr>
-        <td><img src="{icon_url['Tractive Efficiency']}" alt="icon" style="width: 20px; height: 20px;"> Tractive Efficiency (%)</td>
+        <td><img src="{icon_url['Tractive Efficiency']}" alt="icon" style="width: 40px; height: 40px;"> Tractive Efficiency (%)</td>
         <td>{params['tractive_efficiency']:.2f}</td>
     </tr>
     """
