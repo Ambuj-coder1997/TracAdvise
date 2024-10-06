@@ -91,8 +91,50 @@ def calculate_parameters():
         'slip': slip
     }
 
+    
 # Main function to display tractor parameters
 def display_parameters():
+        st.markdown(
+        """
+        <style>
+        /* Set entire app background color to white */
+        .main {
+            background-color: white;
+        }
+
+        /* Set the table font and formatting */
+        table {
+            font-size: 25px;
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: white;
+            color: white;
+        }
+
+        /* Change background color of the table to white */
+        table, th, td {
+            background-color: white;
+        }
+
+        h3 {
+            text-align: center;
+            color: black;
+        }
+
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
     st.markdown("<h1>Real-time Tractor Performance Prediction</h1>", unsafe_allow_html=True)
 
     # Initialize placeholders for output and graph
