@@ -170,8 +170,24 @@ def display_parameters():
         # Display table
         output_placeholder.markdown(table_content, unsafe_allow_html=True)
 
-        # The rest of the code for plotting graphs goes here
-        # (similar to the original, unchanged)
+        # Plot data
+        fig, ax = plt.subplots()
+        ax.plot(time_stamps, engine_torque_values, label="Engine Torque (Nm)")
+        ax.plot(time_stamps, fuel_consumption_values, label="Fuel Consumption (L/h)")
+        ax.plot(time_stamps, engine_power_values, label="Engine Power (hp)")
+        ax.plot(time_stamps, specific_fuel_consumption_values, label="Specific Fuel Consumption (kg/hp-hr)")
+        ax.plot(time_stamps, fuel_consumption_area_values, label="Fuel Consumption per Tilled Area (L/ha)")
+        ax.plot(time_stamps, implement_draft_values, label="Implement Draft (kN)")
+        ax.plot(time_stamps, drawbar_power_values, label="Drawbar Power (hp)")
+        ax.plot(time_stamps, tractive_efficiency_values, label="Tractive Efficiency (%)")
+
+        ax.set_xlabel("Time")
+        ax.set_ylabel("Values")
+        ax.set_title("Real-time Tractor Performance Parameters")
+        ax.legend()
+
+        # Display graph
+        graph_placeholder.pyplot(fig)
 
         # Pause for a short time to simulate real-time behavior
         time.sleep(3)
