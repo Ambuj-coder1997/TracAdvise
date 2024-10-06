@@ -2,6 +2,26 @@ import time
 import matplotlib.pyplot as plt
 import streamlit as st
 
+def generate_throttle_values():
+    return random.randint(45, 85)
+
+def generate_engine_speed_values():
+    return random.randint(1200, 1800)
+
+def generate_implement_depth_values():
+    return round(random.uniform(5, 45), 2)
+
+def generate_forward_speed_values():
+    return round(random.uniform(0.8, 4.5), 2)
+
+# Function to calculate slip percentage
+def calculate_slip(engine_speed, forward_speed, gear_ratio):
+    Vt = engine_speed / gear_ratio  # Calculate theoretical speed
+    slip = 100 * (1 - (forward_speed / Vt))  # Calculate slip percentage
+    return round(slip, 2)
+
+# Gear ratios (as per the provided list)
+gear_ratios = [160, 120, 80, 40, 30]
 # Icon URLs for the table
 icon_url = {
     "Engine Torque": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQhkTm5C6-djVM3yJ6DZ--Yc3axxHSxT8RHVYB4Dthor-vWVhc4",
@@ -59,23 +79,70 @@ def generate_table_html(params):
 
 # Dummy function to simulate parameter calculation
 def calculate_parameters():
-    import random
-    return {
-        'engine_torque': random.uniform(100, 500),
-        'fuel_consumption': random.uniform(10, 30),
-        'engine_power': random.uniform(50, 150),
-        'specific_fuel_consumption': random.uniform(0.2, 0.6),
-        'fuel_consumption_area': random.uniform(5, 20),
-        'implement_draft': random.uniform(2, 10),
-        'drawbar_power': random.uniform(40, 120),
-        'tractive_efficiency': random.uniform(60, 90),
-        'throttle': random.uniform(0, 100),
-        'engine_speed': random.uniform(1000, 3000),
-        'forward_speed': random.uniform(5, 15),
-        'implement_depth': random.uniform(10, 50),
-        'slip': random.uniform(0, 20)
-    }
+    throttle = generate_throttle_values()
+    engine_speed = generate_engine_speed_values()
+    forward_speed = generate_forward_speed_values()
+    implement_depth = generate_implement_depth_values()
+    gear_ratio = random.choice(gear_ratios)
 
+    slip = calculate_slip(engine_speed, forward_speed, gear_ratio)
+
+    # Calculate engine torque (Nm)
+    z = 24.49 * throttle + 42.483
+    r = z - engine_speed
+
+    ent = (
+        (r ** 3 * z ** 2) * (8.5558 * pow(10, -13)) +
+        (r ** 2 * z ** 2) * (-5.086 * pow(10, -9)) +
+        (r * z ** 2) * (3.1619 * pow(10, -7)) +
+        (r ** 3 * z) * (-1.909 * pow(10, -8)) +
+        (r ** 2 * z) * (1.5683 * pow(10, -5)) +
+        (r * z) * (-0.000435357) + 5.93541932
+    )
+
+    # Fuel consumption (L/h)
+    fcp = (
+        (z ** 3 * r ** 2) * (-2.2978 * pow(10, -25)) +
+        (z ** 2 * r ** 2) * (-3.0631 * pow(10, -11)) +
+        (z ** 3 * r) * (-5.2523 * pow(10, -23)) +
+        (z ** 2 * r) * (1.60046 * pow(10, -8)) +
+        (z ** 3) * (-5.60937 * pow(10, -21)) + 1.342006549
+    )
+
+    # Engine power (hp)
+    enp = (2 * 3.14 * engine_speed * ent) / (60 * 746)
+
+    # Specific fuel consumption (kg/hp-hr)
+    sfc = (fcp * 840) / enp if enp != 0 else 0
+
+    # Fuel consumption per tilled area (L/ha)
+    FC = (fcp * 10) / (0.6 * forward_speed) if forward_speed != 0 else 0
+
+    # Implement draft (kN)
+    draft = 0.78 * (652 + 5.1 * forward_speed ** 2) * 0.6 * implement_depth
+
+    # Drawbar power (hp)
+    dbp = 0.3723 * (draft * forward_speed)
+
+    # Tractive efficiency (%)
+    te = dbp * (100 - slip) / (0.9 * enp) if enp != 0 else 0
+
+    return {
+        'engine_torque': ent,
+        'fuel_consumption': fcp,
+        'engine_power': enp,
+        'specific_fuel_consumption': sfc,
+        'fuel_consumption_area': FC,
+        'implement_draft': draft,
+        'drawbar_power': dbp,
+        'tractive_efficiency': te,
+        'throttle': throttle,
+        'engine_speed': engine_speed,
+        'forward_speed': forward_speed,
+        'implement_depth': implement_depth,
+        'slip': slip
+    }
+ 
 # Main function to display tractor parameters
 def display_parameters():
     st.markdown("<h1>Real-time Tractor Performance Prediction</h1>", unsafe_allow_html=True)
