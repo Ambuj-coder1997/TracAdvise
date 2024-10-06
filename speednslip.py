@@ -1,6 +1,8 @@
 import time
 import matplotlib.pyplot as plt
 import streamlit as st
+import random
+import time
 
 def generate_throttle_values():
     return random.randint(45, 85)
