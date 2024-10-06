@@ -93,7 +93,7 @@ def calculate_parameters():
 
     
 # Main function to display tractor parameters
-def display_parameters():
+    def display_parameters():
         st.markdown(
         """
         <style>
