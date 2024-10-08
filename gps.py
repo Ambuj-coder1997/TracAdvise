@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 
 # Function to generate parameters within given ranges
 def generate_engine_speed():
-    return random.randint(1200, 1800)
+    return random.randint(1400, 1500)
 
 def generate_throttle_setting():
     return random.randint(45, 85)
@@ -25,6 +25,9 @@ def generate_latitude(current_lat):
 
 def generate_longitude(current_long):
     return current_long + random.uniform(-0.0001, 0.0001)
+
+def calculate_slip():
+    return round(random.uniform(12.10, 17.85), 2)
 
 # Icon URLs for the table
 icon_url = {
@@ -115,10 +118,11 @@ def display_parameters():
         throttle_setting = generate_throttle_setting()
         implement_depth = generate_implement_depth()
         actual_speed = generate_actual_forward_speed()
-
+        slip = calculate_slip()
         # Calculate Vt and slip
-        Vt = engine_speed / x
-        slip = 100 * (1 - ((actual_speed)/(Vt*3.14*1.6*(60/1000))))
+        #Vt = engine_speed / x
+        #slip = 100 * (1 - ((actual_speed)/(Vt*3.14*1.6*(60/1000))))
+        
 
         # Append data to the lists
         time_stamps.append(current_time)
